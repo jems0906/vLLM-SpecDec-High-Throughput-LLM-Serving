@@ -1,6 +1,6 @@
 # vLLM-SpecDec: High-Throughput LLM Serving with Speculative Decoding
 
-A production-oriented starter project for **Project 1: vLLM Inference Optimizer with Speculative Decoding**. It provides a clean overlay for integrating speculative decoding into a vLLM fork, CUDA Graph capture planning for prefill/decode phases, multi-GPU tensor-parallel launch helpers, an MLPerf-style benchmark harness, and automated Nsight Systems bottleneck analysis.
+A production-oriented starter project for speculative decoding in a vLLM fork, CUDA Graph capture planning for prefill/decode phases, multi-GPU tensor-parallel launch helpers, an MLPerf-style benchmark harness, and automated Nsight Systems bottleneck analysis.
 
 > **Verification note:** this workspace includes runnable unit tests and synthetic benchmark generation. The `112 tokens/sec` and `92% GPU utilization` numbers are encoded as the **target A100 profile** in `benchmarks/target_a100_report.json`; they are not claimed as locally measured unless you run the benchmark on 2x A100 hardware.
 >
@@ -134,6 +134,5 @@ This starts:
 - Nsight summary parsing and bottleneck detection
 - CLI generation for multi-GPU launch plans
 - Upstream `vendor/vllm` compatibility probe
-- End-to-end Project 1 summary generation
 
 For real A100 numbers, run the provided benchmark and profiler scripts on the target hardware.
