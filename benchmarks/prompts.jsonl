@@ -1,0 +1,4 @@
+{"prompt": "Explain speculative decoding in two sentences."}
+{"prompt": "Write a short summary of CUDA Graph capture benefits for LLM inference."}
+{"prompt": "What are the advantages of tensor parallelism on two A100 GPUs?"}
+{"prompt": "Summarize how paged attention reduces memory overhead."}

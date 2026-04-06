@@ -1,0 +1,4 @@
+# Optional native Linux/CUDA host dependencies for full vLLM serving outside Docker.
+# Docker Compose uses the official `vllm/vllm-openai` image instead of these pins.
+torch==2.9.1
+vllm==0.16.0

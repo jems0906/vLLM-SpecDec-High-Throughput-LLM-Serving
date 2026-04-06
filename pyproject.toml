@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vllm-specdec"
+version = "0.1.0"
+description = "Speculative decoding, CUDA Graph capture, tensor parallel launch, and benchmarking helpers for vLLM."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "GitHub Copilot" }]
+dependencies = []
+
+[project.optional-dependencies]
+gpu = [
+  "torch>=2.2",
+  "vllm>=0.5.5"
+]
+dev = [
+  "pytest>=8.0"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

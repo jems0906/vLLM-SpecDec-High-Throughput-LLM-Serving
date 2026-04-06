@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+.env
+vendor/
+profiles/
+benchmarks/results/
+.artifacts/
+docker/.env
+*.egg-info/
+.pytest_cache/

@@ -1,0 +1,49 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Verify Project 1",
+      "type": "shell",
+      "command": ".\\.venv\\Scripts\\python.exe",
+      "args": ["-m", "unittest", "discover", "-s", "tests", "-v"],
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Vendor Smoke Check",
+      "type": "shell",
+      "command": ".\\.venv\\Scripts\\python.exe",
+      "args": ["scripts\\vendor_smoke_check.py"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Project 1 Pipeline",
+      "type": "shell",
+      "command": ".\\.venv\\Scripts\\python.exe",
+      "args": ["scripts\\run_project1_pipeline.py", "--synthetic"],
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Simulate Live Benchmark",
+      "type": "shell",
+      "command": ".\\.venv\\Scripts\\python.exe",
+      "args": ["scripts\\live_serving_benchmark.py", "--simulate"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Simulate Live Comparison",
+      "type": "shell",
+      "command": ".\\.venv\\Scripts\\python.exe",
+      "args": ["scripts\\compare_live_servers.py", "--simulate"],
+      "problemMatcher": []
+    },
+    {
+      "label": "Show TP Runtime Plan",
+      "type": "shell",
+      "command": ".\\.venv\\Scripts\\python.exe",
+      "args": ["scripts\\launch_tp_server.py", "--show-runtime-plan"],
+      "problemMatcher": []
+    }
+  ]
+}

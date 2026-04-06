@@ -1,0 +1,117 @@
+services:
+  vllm-baseline:
+    image: vllm/vllm-openai:latest
+    container_name: vllm-baseline
+    ports:
+      - "8001:8000"
+    environment:
+      CUDA_VISIBLE_DEVICES: "0,1"
+      NCCL_P2P_LEVEL: "NVL"
+      NCCL_ASYNC_ERROR_HANDLING: "1"
+      TORCH_NCCL_BLOCKING_WAIT: "1"
+      VLLM_ENABLE_CUDA_COMPATIBILITY: ${VLLM_ENABLE_CUDA_COMPATIBILITY:-1}
+      HF_TOKEN: ${HF_TOKEN:-}
+      HUGGING_FACE_HUB_TOKEN: ${HF_TOKEN:-}
+      PYTHONPATH: /workspace/vllm-specdec/src:/workspace/vllm-specdec/vendor/vllm
+    volumes:
+      - ..:/workspace/vllm-specdec
+      - hf-cache:/root/.cache/huggingface
+    working_dir: /workspace/vllm-specdec
+    ipc: host
+    shm_size: "8gb"
+    command:
+      [
+        "python3",
+        "-m",
+        "vllm.entrypoints.openai.api_server",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "--model",
+        "meta-llama/Meta-Llama-3-8B-Instruct",
+        "--served-model-name",
+        "llama3-8b-baseline",
+        "--tensor-parallel-size",
+        "2",
+        "--max-num-seqs",
+        "64",
+        "--max-model-len",
+        "4096",
+        "--gpu-memory-utilization",
+        "0.92",
+        "--disable-log-stats"
+      ]
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5)\""]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  vllm-specdec:
+    image: vllm/vllm-openai:latest
+    container_name: vllm-specdec
+    ports:
+      - "8000:8000"
+    environment:
+      CUDA_VISIBLE_DEVICES: "0,1"
+      NCCL_P2P_LEVEL: "NVL"
+      NCCL_ASYNC_ERROR_HANDLING: "1"
+      TORCH_NCCL_BLOCKING_WAIT: "1"
+      VLLM_ENABLE_CUDA_COMPATIBILITY: ${VLLM_ENABLE_CUDA_COMPATIBILITY:-1}
+      HF_TOKEN: ${HF_TOKEN:-}
+      HUGGING_FACE_HUB_TOKEN: ${HF_TOKEN:-}
+      PYTHONPATH: /workspace/vllm-specdec/src:/workspace/vllm-specdec/vendor/vllm
+    volumes:
+      - ..:/workspace/vllm-specdec
+      - hf-cache:/root/.cache/huggingface
+    working_dir: /workspace/vllm-specdec
+    ipc: host
+    shm_size: "8gb"
+    command: ["python3", "scripts/launch_tp_server.py", "--config", "configs/llama3_8b_specdec.json", "--execute"]
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5)\""]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  compare-runner:
+    image: python:3.11-slim
+    depends_on:
+      vllm-baseline:
+        condition: service_healthy
+      vllm-specdec:
+        condition: service_healthy
+    environment:
+      PYTHONPATH: /workspace/vllm-specdec/src
+    volumes:
+      - ..:/workspace/vllm-specdec
+    working_dir: /workspace/vllm-specdec
+    command:
+      [
+        "python3",
+        "scripts/compare_live_servers.py",
+        "--baseline-url",
+        "http://vllm-baseline:8000",
+        "--optimized-url",
+        "http://vllm-specdec:8000"
+      ]
+
+volumes:
+  hf-cache:
