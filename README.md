@@ -1,14 +1,14 @@
 # vLLM-SpecDec: High-Throughput LLM Serving with Speculative Decoding
 
-A production-oriented starter project for speculative decoding in a vLLM fork, CUDA Graph capture planning for prefill/decode phases, multi-GPU tensor-parallel launch helpers, an MLPerf-style benchmark harness, and automated Nsight Systems bottleneck analysis.
+This repository provides a submission-ready implementation scaffold for speculative decoding with vLLM, including CUDA Graph capture planning for prefill/decode phases, multi-GPU tensor-parallel launch helpers, an MLPerf-style benchmark harness, and automated Nsight Systems bottleneck analysis.
 
-> **Verification note:** this workspace includes runnable unit tests and synthetic benchmark generation. The `112 tokens/sec` and `92% GPU utilization` numbers are encoded as the **target A100 profile** in `benchmarks/target_a100_report.json`; they are not claimed as locally measured unless you run the benchmark on 2x A100 hardware.
+> **Verification note:** this workspace includes runnable unit tests and synthetic benchmark generation. The `112 tok/s` and `92% GPU utilization` figures are included as the **target A100 profile** in `benchmarks/target_a100_report.json`; they should be treated as target values unless re-measured on real 2x A100 hardware.
 >
 > **Runtime note:** actual `vLLM` serving requires a **Linux/CUDA environment** with `PyTorch`, `vLLM`, and GPU drivers available. The current Windows workspace is suitable for scaffolding, tests, and packaging, but not for native A100 execution.
 
 ## ✅ Project Deliverables Covered
 
-- **Speculative decoding overlay** for `Llama-3-8B`
+- **Speculative decoding scaffold** for `Llama-3-8B`
 - **CUDA Graph capture hooks** for `prefill` and `decode`
 - **Tensor parallel launch plan** for **2x A100s**
 - **MLPerf-style benchmark suite** for baseline vs optimized comparisons
@@ -109,7 +109,7 @@ This starts:
 
 > The first pull is large because `vllm/vllm-openai:latest` is a GPU runtime image. The stack mounts a persistent `hf-cache` volume and enables `ipc: host` for tensor-parallel serving.
 
-## 📊 Target Performance Profile
+## 📊 Target Performance Profile (A100 Reference)
 
 | Metric | Baseline vLLM | Optimized target |
 |---|---:|---:|
