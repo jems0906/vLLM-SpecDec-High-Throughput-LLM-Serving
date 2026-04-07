@@ -4,14 +4,16 @@ import json
 import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
+from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 TARGET_PROFILE = ROOT / "benchmarks" / "target_a100_report.json"
 
 
-def load_target_profile() -> dict[str, object]:
+def load_target_profile() -> dict[str, Any]:
     try:
-        return json.loads(TARGET_PROFILE.read_text(encoding="utf-8"))
+        raw = json.loads(TARGET_PROFILE.read_text(encoding="utf-8"))
+        return raw if isinstance(raw, dict) else {"error": "target profile unavailable"}
     except Exception:
         return {"error": "target profile unavailable"}
 
