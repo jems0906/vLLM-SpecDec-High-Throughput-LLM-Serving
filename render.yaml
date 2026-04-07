@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: vllm-specdec-demo
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerContext: .
+    dockerfilePath: ./docker/Dockerfile.render
+    healthCheckPath: /health
+    autoDeployTrigger: commit

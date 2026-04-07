@@ -1,0 +1,14 @@
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+COPY README.md ./
+COPY benchmarks ./benchmarks
+COPY scripts/render_status_server.py ./scripts/render_status_server.py
+
+EXPOSE 10000
+
+CMD ["python3", "scripts/render_status_server.py"]
